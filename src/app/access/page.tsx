@@ -78,7 +78,7 @@ function AccessForm() {
           placeholder="Enter workshop access code"
           autoFocus
           autoComplete="off"
-          className="input-glow w-full rounded-xl border border-black/[0.08] bg-white px-4 py-3.5 text-center text-lg font-mono font-bold tracking-[0.3em] text-gray-900 placeholder-gray-400 transition-all"
+          className="input-glow w-full rounded-xl border border-black/[0.08] bg-white px-4 py-3.5 text-center text-lg font-mono font-bold tracking-[0.25em] text-gray-900 placeholder:text-gray-400 placeholder:tracking-normal placeholder:font-semibold transition-all"
         />
 
         {error && (

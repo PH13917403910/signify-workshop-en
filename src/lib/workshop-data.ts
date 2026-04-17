@@ -4,7 +4,7 @@ export const stages: StageInfo[] = [
   {
     id: 1,
     title: "The Awakening",
-    subtitle: "The Awakening",
+    subtitle: "Moment of insight",
     time: "13:00 – 13:45",
     durationMin: 45,
     icon: "⚡",
@@ -40,7 +40,7 @@ export const stages: StageInfo[] = [
   {
     id: 2,
     title: "Demystifying the Tech",
-    subtitle: "Demystifying the Tech",
+    subtitle: "Seeing the stack clearly",
     time: "13:45 – 14:30",
     durationMin: 45,
     icon: "🔧",
@@ -76,7 +76,7 @@ export const stages: StageInfo[] = [
   {
     id: 3,
     title: "Crisis War Room",
-    subtitle: "Crisis War Room",
+    subtitle: "Crisis rescue sprint",
     time: "14:45 – 15:45",
     durationMin: 60,
     icon: "🚨",
@@ -112,7 +112,7 @@ export const stages: StageInfo[] = [
   {
     id: 4,
     title: "Action & Outlook",
-    subtitle: "Action & Outlook",
+    subtitle: "From ideas to action",
     time: "15:45 – 16:45",
     durationMin: 60,
     icon: "🚀",

@@ -169,11 +169,14 @@ export default function HomePage() {
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 mb-1 font-display tracking-tight">
                     {s.title}
-                    <span className="text-sm font-normal text-gray-500 ml-2 font-sans">
-                      {s.subtitle}
-                    </span>
+                    {s.subtitle.trim() &&
+                      s.subtitle.trim() !== s.title.trim() && (
+                      <span className="text-sm font-normal text-gray-500 ml-2 font-sans">
+                        {s.subtitle}
+                      </span>
+                    )}
                   </h3>
-                  <p className="text-sm text-gray-500 line-clamp-2">
+                  <p className="text-sm text-gray-500 line-clamp-4">
                     <AutoTerm text={s.description} />
                   </p>
                   <div className="mt-3 flex items-center gap-3 text-xs text-gray-400">
