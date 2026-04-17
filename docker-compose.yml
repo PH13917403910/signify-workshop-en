@@ -1,0 +1,12 @@
+services:
+  workshop:
+    build: .
+    container_name: signify-workshop
+    ports:
+      - "3100:3100"
+    environment:
+      - NODE_ENV=production
+      - PORT=3100
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-signify2026}
+    restart: unless-stopped
+    mem_limit: 512m
