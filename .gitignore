@@ -3,3 +3,5 @@ node_modules/
 .env*.local
 *.tsbuildinfo
 data/
+.DS_Store
+public/videos/_before_subs/

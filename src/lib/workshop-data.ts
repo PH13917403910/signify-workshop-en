@@ -13,7 +13,7 @@ export const stages: StageInfo[] = [
     videoTitle: "Before you ask AI, ask yourself three questions",
     videoUrl: "/videos/stage1_before_you_ask_ai.mp4",
     videoStart: 0,
-    videoEnd: 321,
+    videoEnd: 211,
     videoQuote:
       "CCF is not about writing better prompts — it's about defining better decisions. AI generates text that looks like truth. Your job is to verify.",
     videoQuoteCn:
@@ -49,7 +49,7 @@ export const stages: StageInfo[] = [
     videoTitle: "The four-layer foundation behind the magic",
     videoUrl: "/videos/stage2_four_layers.mp4",
     videoStart: 0,
-    videoEnd: 293,
+    videoEnd: 260,
     videoQuote:
       "AI is not magic, it's engineering. And the first lesson of engineering is: if the foundation is unstable, nothing you build on top will stand.",
     videoQuoteCn:
@@ -85,7 +85,7 @@ export const stages: StageInfo[] = [
     videoTitle: "AI analyzes; humans judge—never flip that",
     videoUrl: "/videos/stage3_ai_analyzes_you_decide.mp4",
     videoStart: 0,
-    videoEnd: 275,
+    videoEnd: 319,
     videoQuote:
       "AI analyzes, humans judge — never reverse this. If you wouldn't rubber-stamp an intern's recommendation, don't rubber-stamp AI's either.",
     videoQuoteCn:
@@ -121,7 +121,7 @@ export const stages: StageInfo[] = [
     videoTitle: "The costliest decision is doing nothing",
     videoUrl: "/videos/stage4_cost_of_inaction.mp4",
     videoStart: 0,
-    videoEnd: 275,
+    videoEnd: 235,
     videoQuote:
       "Sometimes the most expensive mistake isn't investing in the wrong project — it's investing in nothing at all.",
     videoQuoteCn:
