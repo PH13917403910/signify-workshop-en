@@ -16,7 +16,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Signify AI Workshop 2026 (EN)",
+  title: "Signify SCM AI Workshop 2026 (EN)",
   description: "Signify Greater China Supply Chain AI Transformation Workshop",
 };
 

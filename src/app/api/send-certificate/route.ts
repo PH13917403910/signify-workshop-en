@@ -88,14 +88,14 @@ export async function POST(request: NextRequest) {
 
     try {
       const { error } = await resend.emails.send({
-        from: "Signify AI Workshop <workshop@jpfamilies.com>",
+        from: "Signify SCM AI Workshop <workshop@jpfamilies.com>",
         replyTo: "workshop@jpfamilies.com",
         to: p.email.trim(),
         subject: `${name}, congratulations on completing the Signify Supply Chain AI Workshop!`,
         text,
         attachments: [
           {
-            filename: "Signify-AI-Workshop-Certificate.pdf",
+            filename: "Signify-SCM-AI-Workshop-Certificate.pdf",
             content: pdfBuffer,
           },
         ],

@@ -87,7 +87,7 @@ export default function PresenterPage() {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs text-gray-400 uppercase tracking-wider">
-            Signify AI Workshop · Presenter View
+            Signify SCM AI Workshop · Presenter View
           </p>
           {stage ? (
             <h1 className="text-3xl font-black text-gray-900">

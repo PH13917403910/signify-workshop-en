@@ -56,7 +56,7 @@ function AccessForm() {
       <div className="text-center mb-8">
         <LogoMark />
         <h1 className="text-2xl font-black text-gray-900 font-display tracking-tight">
-          Signify AI Workshop
+          Signify SCM AI Workshop
         </h1>
         <p className="text-xs text-gray-400 mt-2 tracking-[0.2em] uppercase font-display">
           {eventDate} · Supply Chain AI Transformation Workshop

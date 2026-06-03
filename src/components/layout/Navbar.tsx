@@ -37,7 +37,7 @@ export default function Navbar() {
             <Link href="/" className="flex items-center gap-2.5 font-bold text-gray-900 group">
               <LogoMark />
               <span className="hidden sm:inline font-display text-sm tracking-tight group-hover:text-accent transition-colors">
-                Signify AI Workshop
+                Signify SCM AI Workshop
               </span>
             </Link>
 

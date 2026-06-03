@@ -274,7 +274,7 @@ export async function generateCertificatePDF(name: string, date: string): Promis
   const p2 = doc.addPage([W, H]);
   drawKnowledgeSummary(p2, font);
 
-  doc.setTitle("Signify AI Workshop Certificate");
+  doc.setTitle("Signify SCM AI Workshop Certificate");
   doc.setAuthor("Signify Supply Chain AI Workshop");
   doc.setSubject(`Certificate for ${name}`);
 
