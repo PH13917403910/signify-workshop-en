@@ -110,7 +110,8 @@ export default function TokenPredictor({
         setPickedTrap(!!candidate.isHallucination);
       }
 
-      setShowReveal(true);
+      // Let each word's probability animate in on the options first, then show the comparison
+      setTimeout(() => setShowReveal(true), 1500);
     },
     [justSelected, step, isLastStep, stepIndex],
   );
@@ -495,7 +496,7 @@ function PredictOverlay({
                       isSelected
                         ? "border-accent/50 bg-accent/10"
                         : justSelected
-                          ? "border-black/[0.03] bg-black/[0.01] opacity-40"
+                          ? "border-black/[0.06] bg-black/[0.02]"
                           : "border-black/[0.06] bg-black/[0.02] hover:border-accent/30 hover:bg-accent/5"
                     }`}
                   >
@@ -517,8 +518,9 @@ function PredictOverlay({
                               ? "bg-gradient-to-r from-amber-500 to-orange-500"
                               : "bg-black/[0.08]"
                         }`}
-                        animate={{ width: `${prob * 100}%` }}
-                        transition={{ duration: 0.4, ease: EASE }}
+                        initial={{ width: "0%" }}
+                        animate={{ width: justSelected ? `${prob * 100}%` : "0%" }}
+                        transition={{ duration: 0.45, ease: EASE }}
                       />
                     </div>
                     <span
@@ -526,7 +528,7 @@ function PredictOverlay({
                         isSelected ? "text-accent" : "text-gray-400"
                       }`}
                     >
-                      {Math.round(prob * 100)}%
+                      {justSelected ? `${Math.round(prob * 100)}%` : ""}
                     </span>
                   </motion.button>
                 );
