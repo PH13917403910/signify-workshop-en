@@ -972,14 +972,28 @@ function TrainingOverlay({
                 disabled={isFed}
                 className={`text-left rounded-lg border px-4 py-2.5 text-sm transition-all ${
                   isFed
-                    ? "border-accent/20 bg-accent/5 opacity-40 cursor-default"
+                    ? "border-accent/20 bg-accent/5 opacity-70 cursor-default"
                     : "border-black/[0.06] bg-black/[0.02] hover:border-accent/30 hover:bg-accent/5 cursor-pointer"
                 }`}
               >
                 <span className={isFed ? "text-gray-400 line-through" : "text-gray-600"}>
                   {card.text}
                 </span>
-                {isFed && <span className="ml-2 text-accent text-xs">✓ Learned</span>}
+                {isFed && (
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                    <span className="text-[11px] text-gray-400">Taught the AI:</span>
+                    {Object.entries(card.boosts)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([label, boost]) => (
+                        <span
+                          key={label}
+                          className="inline-flex items-center rounded-full bg-accent/10 border border-accent/20 px-2 py-0.5 text-[11px] font-bold text-accent"
+                        >
+                          {label} +{Math.round(boost * 100)}%
+                        </span>
+                      ))}
+                  </div>
+                )}
               </motion.button>
             );
           })}

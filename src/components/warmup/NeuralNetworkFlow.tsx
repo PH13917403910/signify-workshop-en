@@ -78,6 +78,26 @@ export default function NeuralNetworkFlow({
     return set;
   }, [lastCardBoosts]);
 
+  const boostByIndex = useMemo(() => {
+    const m = new Map<number, number>();
+    if (lastCardBoosts) {
+      for (const [label, v] of Object.entries(lastCardBoosts)) {
+        const idx = BAR_LABELS.indexOf(label);
+        if (idx >= 0) m.set(idx, v);
+      }
+    }
+    return m;
+  }, [lastCardBoosts]);
+
+  const topBoost = useMemo(() => {
+    if (!lastCardBoosts) return null;
+    let best: [string, number] | null = null;
+    for (const e of Object.entries(lastCardBoosts)) {
+      if (!best || e[1] > best[1]) best = e as [string, number];
+    }
+    return best;
+  }, [lastCardBoosts]);
+
   const triggerAnimation = useCallback(() => {
     setAnimating(true);
     setAnimPhase(1);
@@ -246,7 +266,7 @@ export default function NeuralNetworkFlow({
                 initial={false}
                 animate={{
                   width: barW,
-                  fillOpacity: 0.25 + barValues[i] * 0.6,
+                  fillOpacity: active ? 0.95 : 0.25 + barValues[i] * 0.6,
                 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />
@@ -254,11 +274,25 @@ export default function NeuralNetworkFlow({
               <text
                 x={BAR_X + BAR_MAX_W + 6}
                 y={y + 3.5}
-                className="text-[9px] font-mono"
-                fill="#6e6e73"
+                className={`text-[9px] font-mono ${active ? "font-bold" : ""}`}
+                fill={active ? "#f97316" : "#6e6e73"}
               >
                 {BAR_LABELS[i]} {Math.round(barValues[i] * 100)}%
               </text>
+              {/* Floating boost delta */}
+              {active && boostByIndex.has(i) && (
+                <motion.text
+                  x={BAR_X + BAR_MAX_W + 6}
+                  textAnchor="start"
+                  className="text-[10px] font-bold"
+                  fill="#f97316"
+                  initial={{ opacity: 0, y: y + 2 }}
+                  animate={{ opacity: [0, 1, 1, 0], y: y - 9 }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                >
+                  +{Math.round((boostByIndex.get(i) || 0) * 100)}%
+                </motion.text>
+              )}
             </g>
           );
         })}
@@ -293,20 +327,29 @@ export default function NeuralNetworkFlow({
         </text>
       </svg>
 
-      {trainedCount === 0 && (
-        <p className="text-[10px] text-gray-400 mt-1.5 text-center">
-          After feeding training text, watch how internal connections shift
+      {animating && topBoost ? (
+        <p className="text-[11px] text-accent font-medium mt-1.5 text-center">
+          You just taught the AI: the next word is more likely “{topBoost[0]}” +
+          {Math.round(topBoost[1] * 100)}%
         </p>
-      )}
-      {trainedCount > 0 && trainedCount < 12 && (
-        <p className="text-[10px] text-amber-600/70 mt-1.5 text-center">
-          Connections strengthen — the net learns what usually follows “inventory alert”
-        </p>
-      )}
-      {trainedCount >= 12 && (
-        <p className="text-[10px] text-accent/70 mt-1.5 text-center">
-          Training done — the path to “suggest transfer” is strongest because it appears most often
-        </p>
+      ) : (
+        <>
+          {trainedCount === 0 && (
+            <p className="text-[10px] text-gray-400 mt-1.5 text-center">
+              After feeding training text, watch how internal connections shift
+            </p>
+          )}
+          {trainedCount > 0 && trainedCount < 12 && (
+            <p className="text-[10px] text-amber-600/70 mt-1.5 text-center">
+              Connections strengthen — the net learns what usually follows “inventory alert”
+            </p>
+          )}
+          {trainedCount >= 12 && (
+            <p className="text-[10px] text-accent/70 mt-1.5 text-center">
+              Training done — the path to “suggest transfer” is strongest because it appears most often
+            </p>
+          )}
+        </>
       )}
     </div>
   );
