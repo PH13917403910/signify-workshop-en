@@ -110,8 +110,7 @@ export default function TokenPredictor({
         setPickedTrap(!!candidate.isHallucination);
       }
 
-      // Let each word's probability animate in on the options first, then show the comparison
-      setTimeout(() => setShowReveal(true), 1500);
+      setShowReveal(true);
     },
     [justSelected, step, isLastStep, stepIndex],
   );
@@ -473,14 +472,20 @@ function PredictOverlay({
         </p>
       </div>
 
-      {!showReveal ? (
-        <>
-          <div>
-            <p className="text-xs text-gray-400 mb-3">
+      <div>
+        <p className="text-xs text-gray-400 mb-3">
+          {justSelected ? (
+            showTemperature
+              ? "This is the model's real probability distribution — drag Temperature below to see how it shifts"
+              : "This is the model's real probability distribution"
+          ) : (
+            <>
               Which token do you think the model picks next?
               <span className="text-accent"> ▼</span>
-            </p>
-            <div className="grid gap-2">
+            </>
+          )}
+        </p>
+        <div className="grid gap-2">
               {step.candidates.map((c, i) => {
                 const isSelected = justSelected === c.token;
                 const prob = adjustedProbs[i];
@@ -533,19 +538,19 @@ function PredictOverlay({
                   </motion.button>
                 );
               })}
-            </div>
-          </div>
+        </div>
+      </div>
 
-          {showTemperature && (
-            <TemperatureSimPanel
-              candidates={step.candidates}
-              temperature={temperature}
-              temperatureHints={temperatureHints}
-              onTemperatureChange={onTemperatureChange}
-            />
-          )}
-        </>
-      ) : (
+      {showTemperature && justSelected && (
+        <TemperatureSimPanel
+          candidates={step.candidates}
+          temperature={temperature}
+          temperatureHints={temperatureHints}
+          onTemperatureChange={onTemperatureChange}
+        />
+      )}
+
+      {showReveal && (
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
