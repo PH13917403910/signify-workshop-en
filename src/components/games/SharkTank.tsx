@@ -121,10 +121,38 @@ export default function SharkTank() {
   const memberNames = team ? state.teams[team]?.memberNames || [] : [];
   const hasMembers = memberNames.length > 0;
   const teamColor = team ? TEAM_COLORS[team as TeamId] : "#f97316";
-  const allMembersVoted = hasMembers && memberNames.every((n) => completedVoters.has(n));
+
+  // Who has voted, derived authoritatively from server allocations (`team:name`),
+  // merged with a local optimistic set so the just-submitted voter shows instantly.
+  const serverVotedNames = useMemo(() => {
+    const set = new Set<string>();
+    if (!team) return set;
+    const prefix = `${team}:`;
+    const alloc = state.game4.allocations;
+    if (alloc && typeof alloc === "object") {
+      for (const voters of Object.values(alloc)) {
+        if (!voters || typeof voters !== "object") continue;
+        for (const voterId of Object.keys(voters)) {
+          if (voterId.startsWith(prefix)) set.add(voterId.slice(prefix.length));
+        }
+      }
+    }
+    return set;
+  }, [team, state.game4.allocations]);
+
+  const votedNames = useMemo(
+    () => new Set<string>([...serverVotedNames, ...completedVoters]),
+    [serverVotedNames, completedVoters],
+  );
+  const votedCount = useMemo(
+    () => memberNames.filter((n) => votedNames.has(n)).length,
+    [memberNames, votedNames],
+  );
+
+  const allMembersVoted = hasMembers && memberNames.every((n) => votedNames.has(n));
   const nextUnvoted = useMemo(
-    () => memberNames.find((n) => !completedVoters.has(n)),
-    [memberNames, completedVoters],
+    () => memberNames.find((n) => !votedNames.has(n)),
+    [memberNames, votedNames],
   );
 
   const tokensUsed = Object.values(allocations).reduce((a, b) => a + b, 0);
@@ -234,6 +262,13 @@ export default function SharkTank() {
     setCurrentVoter(null);
   };
 
+  const handleBackToSelector = () => {
+    setCurrentVoter(null);
+    setAllocations({});
+    setPreCommitNote("");
+    setPreCommitSaved(false);
+  };
+
   const handleTeamSubmit = () => {
     if (tokensUsed === 0 || !isOpen) return;
     const voterId = team || "anon";
@@ -248,7 +283,12 @@ export default function SharkTank() {
   };
 
   useEffect(() => {
-    if (isOpen) setTeamSubmitted(false);
+    if (isOpen) {
+      setTeamSubmitted(false);
+      setCompletedVoters(new Set());
+      setCurrentVoter(null);
+      setShowPassScreen(false);
+    }
   }, [isOpen]);
 
   const maxTotal = Math.max(1, ...Object.values(totals));
@@ -276,7 +316,7 @@ export default function SharkTank() {
         </div>
         <div className="flex flex-wrap justify-center gap-2">
           {memberNames.map((name) => {
-            const isDone = completedVoters.has(name);
+            const isDone = votedNames.has(name);
             return (
               <span key={name} className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${isDone ? "bg-green-500/10 text-green-600 ring-1 ring-green-500/30" : "bg-black/[0.03] text-gray-400"}`}>
                 {isDone ? "✓ " : ""}{name}
@@ -298,6 +338,28 @@ export default function SharkTank() {
     );
   }
 
+  // Team joined but no members registered — guide to sign-in so rotation works
+  if (isOpen && team && !hasMembers && !showResults) {
+    return (
+      <div className="max-w-md mx-auto flex flex-col items-center justify-center min-h-[40vh] space-y-5 text-center">
+        <div className="text-5xl">📝</div>
+        <div>
+          <p className="text-lg font-bold text-gray-900 mb-1">No team members registered yet</p>
+          <p className="text-sm text-gray-500">
+            Stage 4 uses turn-based voting — please register each member on the sign-in page first, then come back to allocate tokens.
+          </p>
+        </div>
+        <a
+          href="/join"
+          className="rounded-2xl px-8 py-3.5 font-bold text-white transition hover:opacity-90"
+          style={{ backgroundColor: teamColor }}
+        >
+          Go to sign-in page →
+        </a>
+      </div>
+    );
+  }
+
   // Member selector before allocation
   if (isOpen && hasMembers && !currentVoter && !showResults) {
     return (
@@ -310,11 +372,11 @@ export default function SharkTank() {
         <div className="card-glass rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-gray-400">Progress</span>
-            <span className="text-xs font-mono text-gray-500">{completedVoters.size}/{memberNames.length}</span>
+            <span className="text-xs font-mono text-gray-500">{votedCount}/{memberNames.length}</span>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
             {memberNames.map((name) => {
-              const done = completedVoters.has(name);
+              const done = votedNames.has(name);
               return (
                 <button key={name} onClick={() => !done && setCurrentVoter(name)} disabled={done}
                   className={`flex items-center gap-3 rounded-xl p-3 text-left transition-all ${done ? "bg-green-500/5 border border-green-500/20 cursor-default" : "bg-black/[0.03] border border-black/[0.06] hover:border-accent/40 hover:bg-accent/5 cursor-pointer"}`}
@@ -347,7 +409,12 @@ export default function SharkTank() {
             {currentVoter.charAt(0).toUpperCase()}
           </span>
           <span className="text-sm font-bold" style={{ color: teamColor }}>{currentVoter} is allocating tokens</span>
-          <span className="text-xs text-gray-400 ml-auto">Scroll down to submit when ready</span>
+          <button
+            onClick={handleBackToSelector}
+            className="ml-auto rounded-lg bg-black/[0.04] px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-black/[0.08] transition"
+          >
+            ← Switch
+          </button>
         </div>
       )}
 
